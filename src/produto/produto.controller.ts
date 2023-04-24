@@ -32,13 +32,16 @@ export class ProdutoController {
     produto.caracteristicas = dadosProduto.caracteristicas;
     produto.imagens = dadosProduto.imagens;
 
-    const produtoCadastrado = this.produtoService.criaProduto(produto);
-    return produtoCadastrado;
+    const produtoCadastrado = await this.produtoService.criaProduto(produto);
+    return {
+      mensagem: 'Produto criado com sucesso.',
+      produto: produtoCadastrado,
+    };
   }
 
   @Get()
   async listaTodos() {
-    return this.produtoService.listProdutos();
+    return this.produtoService.listaProdutos();
   }
 
   @Put('/:id')
@@ -52,18 +55,17 @@ export class ProdutoController {
     );
 
     return {
-      mensagem: 'produto atualizado com sucesso',
+      mensagem: 'Produto atualizado com sucesso.',
       produto: produtoAlterado,
     };
   }
 
   @Delete('/:id')
   async remove(@Param('id') id: string) {
-    const produtoRemovido = await this.produtoService.deletaProduto(id);
+    await this.produtoService.deletaProduto(id);
 
     return {
-      mensagem: 'produto removido com sucesso',
-      produto: produtoRemovido,
+      mensagem: 'Produto removido com sucesso.',
     };
   }
 }
