@@ -26,7 +26,7 @@ export class ProdutoController {
     produto.nome = dadosProduto.nome;
     produto.usuarioId = dadosProduto.usuarioId;
     produto.valor = dadosProduto.valor;
-    produto.quantidade = dadosProduto.quantidade;
+    produto.quantidadeDisponivel = dadosProduto.quantidadeDisponivel;
     produto.descricao = dadosProduto.descricao;
     produto.categoria = dadosProduto.categoria;
     produto.caracteristicas = dadosProduto.caracteristicas;
