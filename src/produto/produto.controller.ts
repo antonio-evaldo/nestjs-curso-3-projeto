@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -46,7 +47,8 @@ export class ProdutoController {
 
   @Put('/:id')
   async atualiza(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe({ version: '4' }))
+    id: string,
     @Body() dadosProduto: AtualizaProdutoDTO,
   ) {
     const produtoAlterado = await this.produtoService.atualizaProduto(
@@ -61,7 +63,10 @@ export class ProdutoController {
   }
 
   @Delete('/:id')
-  async remove(@Param('id') id: string) {
+  async remove(
+    @Param('id', new ParseUUIDPipe({ version: '4' }))
+    id: string,
+  ) {
     await this.produtoService.deletaProduto(id);
 
     return {
