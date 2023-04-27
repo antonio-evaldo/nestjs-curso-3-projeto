@@ -2,8 +2,10 @@ import { Type } from 'class-transformer';
 import {
   ArrayMinSize,
   IsArray,
+  IsInt,
   IsNotEmpty,
   IsNumber,
+  IsPositive,
   IsString,
   IsUrl,
   IsUUID,
@@ -16,11 +18,11 @@ import { ProdutoEntity } from '../produto.entity';
 export class CaracteristicaProdutoDTO {
   id: string;
 
-  @IsString()
+  @IsString({ message: 'Nome da característica deve ser uma string' })
   @IsNotEmpty({ message: 'Nome da cadasterística não pode ser vazio' })
   nome: string;
 
-  @IsString()
+  @IsString({ message: 'Descrição da característica deve ser uma string' })
   @IsNotEmpty({ message: 'Descrição da característica não pode ser vazio' })
   descricao: string;
 
@@ -33,7 +35,7 @@ export class ImagemProdutoDTO {
   @IsUrl({ message: 'URL para imagem inválida' })
   url: string;
 
-  @IsString()
+  @IsString({ message: 'Descrição da imagem deve ser uma string' })
   @IsNotEmpty({ message: 'Descrição da imagem não pode ser vazia' })
   descricao: string;
 
@@ -41,23 +43,26 @@ export class ImagemProdutoDTO {
 }
 
 export class CriaProdutoDTO {
-  @IsUUID(undefined, { message: 'ID de usuário inválido' })
+  @IsUUID(4, { message: 'ID de usuário inválido' })
   usuarioId: string;
 
-  @IsString()
+  @IsString({ message: 'O nome do produto deve ser uma string' })
   @IsNotEmpty({ message: 'Nome do produto não pode ser vazio' })
   nome: string;
 
-  @IsNumber({ maxDecimalPlaces: 2, allowNaN: false, allowInfinity: false })
-  @Min(1, { message: 'O valor precisa ser maior que zero' })
+  @IsNumber(
+    { maxDecimalPlaces: 2, allowNaN: false, allowInfinity: false },
+    { message: 'O valor do produto deve ser um número válido' },
+  )
+  @IsPositive({ message: 'O valor do produto precisa ser maior que zero' })
   valor: number;
 
-  @IsNumber()
-  @Min(0, { message: 'Quantidade mínima inválida' })
+  @IsInt({ message: 'A quantidade disponível deve ser um número inteiro' })
+  @Min(0, { message: 'Quantidade disponível inválida' })
   quantidadeDisponivel: number;
 
-  @IsString()
-  @IsNotEmpty({ message: 'Descrição do produto não pode ser vazia ' })
+  @IsString({ message: 'O nome do produto deve ser uma string' })
+  @IsNotEmpty({ message: 'Descrição do produto não pode ser vazia' })
   @MaxLength(1000, {
     message: 'Descrição não pode ter mais que 1000 caracteres',
   })
@@ -75,7 +80,7 @@ export class CriaProdutoDTO {
   @Type(() => ImagemProdutoDTO)
   imagens: ImagemProdutoDTO[];
 
-  @IsString()
+  @IsString({ message: 'Categoria do produto deve ser uma string' })
   @IsNotEmpty({ message: 'Categoria do produto não pode ser vazia' })
   categoria: string;
 }
