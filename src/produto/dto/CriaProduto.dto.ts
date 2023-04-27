@@ -32,7 +32,7 @@ export class CaracteristicaProdutoDTO {
 export class ImagemProdutoDTO {
   id: string;
 
-  @IsUrl({ message: 'URL para imagem inválida' })
+  @IsUrl(undefined, { message: 'URL para imagem inválida' })
   url: string;
 
   @IsString({ message: 'Descrição da imagem deve ser uma string' })
@@ -63,20 +63,22 @@ export class CriaProdutoDTO {
 
   @IsString({ message: 'O nome do produto deve ser uma string' })
   @IsNotEmpty({ message: 'Descrição do produto não pode ser vazia' })
-  @MaxLength(1000, {
+  @MaxLength(5000, {
     message: 'Descrição não pode ter mais que 1000 caracteres',
   })
   descricao: string;
 
   @ValidateNested()
   @IsArray()
-  @ArrayMinSize(1)
+  @ArrayMinSize(1, {
+    message: 'O produto deve conter pelo menos uma característica',
+  })
   @Type(() => CaracteristicaProdutoDTO)
   caracteristicas: CaracteristicaProdutoDTO[];
 
   @ValidateNested()
   @IsArray()
-  @ArrayMinSize(1)
+  @ArrayMinSize(1, { message: 'O produto deve conter pelo menos uma imagem' })
   @Type(() => ImagemProdutoDTO)
   imagens: ImagemProdutoDTO[];
 
