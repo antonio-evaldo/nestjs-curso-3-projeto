@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { APP_FILTER } from '@nestjs/core';
 
 import { ProdutoModule } from './produto/produto.module';
 import { UsuarioModule } from './usuario/usuario.module';
 import { PostgresConfigService } from './config/postgres.config.service';
+import { FiltroDeExcecaoHttp } from './filtros/filtro-de-excecao-http';
 
 @Module({
   imports: [
@@ -17,6 +19,12 @@ import { PostgresConfigService } from './config/postgres.config.service';
       useClass: PostgresConfigService,
       inject: [PostgresConfigService],
     }),
+  ],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: FiltroDeExcecaoHttp,
+    },
   ],
 })
 export class AppModule {}
