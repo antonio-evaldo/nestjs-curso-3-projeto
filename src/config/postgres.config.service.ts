@@ -7,6 +7,7 @@ export class PostgresConfigService implements TypeOrmOptionsFactory {
   constructor(private configService: ConfigService) {}
 
   createTypeOrmOptions(): TypeOrmModuleOptions {
+    // O objeto abaixo é o Data Source (Fonte de Dados) que será utilizado pelo TypeORM
     return {
       type: 'postgres',
       host: this.configService.get<string>('DB_HOST'),
@@ -15,7 +16,6 @@ export class PostgresConfigService implements TypeOrmOptionsFactory {
       password: this.configService.get<string>('DB_PASSWORD'),
       database: this.configService.get<string>('DB_NAME'),
       entities: [__dirname + '/../**/*.entity.{js,ts}'],
-      migrations: [__dirname + '/migrations/*.{js,ts}'],
     };
   }
 }
