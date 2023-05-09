@@ -24,7 +24,6 @@ export class ProdutoController {
 
     produto.id = randomUUID();
     produto.nome = dadosProduto.nome;
-    produto.usuarioId = dadosProduto.usuarioId;
     produto.valor = dadosProduto.valor;
     produto.quantidadeDisponivel = dadosProduto.quantidadeDisponivel;
     produto.descricao = dadosProduto.descricao;
