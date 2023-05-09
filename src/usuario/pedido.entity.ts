@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 
 import { StatusPedido } from './enums/statusPedido.enum';
-import { ProdutoPedidoEntity } from './produtoPedido.entity';
+import { ItemPedidoEntity } from './itemPedido.entity';
 import { UsuarioEntity } from './usuario.entity';
 
 @Entity({ name: 'pedidos' })
@@ -36,6 +36,8 @@ export class PedidoEntity {
   @ManyToOne(() => UsuarioEntity, (usuario) => usuario.pedidos)
   usuario: UsuarioEntity;
 
-  @OneToMany(() => ProdutoPedidoEntity, (produtoPedido) => produtoPedido.pedido)
-  produtosPedido: ProdutoPedidoEntity[];
+  @OneToMany(() => ItemPedidoEntity, (itemPedido) => itemPedido.pedido, {
+    cascade: true,
+  })
+  itensPedido: ItemPedidoEntity[];
 }

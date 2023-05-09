@@ -11,7 +11,7 @@ import {
 
 import { StatusPedido } from '../enums/statusPedido.enum';
 
-class ProdudoPedidoDTO {
+class ItemPedidoDTO {
   // @IsUUID()
   // produtoId: string;
 
@@ -32,6 +32,6 @@ export class CriaPedidoDTO {
   @ValidateNested()
   @IsArray()
   @ArrayMinSize(1)
-  @Type(() => ProdudoPedidoDTO)
-  produtosPedido: ProdudoPedidoDTO[];
+  @Type(() => ItemPedidoDTO)
+  itensPedido: ItemPedidoDTO[];
 }

@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { ProdutoImagemEntity } from './produto-imagem.entity';
 import { ProdutoCaracteristicaEntity } from './produto-caracteristica.entity';
-import { ProdutoPedidoEntity } from 'src/usuario/produtoPedido.entity';
+import { ItemPedidoEntity } from 'src/usuario/itemPedido.entity';
 
 @Entity({ name: 'produtos' })
 export class ProdutoEntity {
@@ -54,9 +54,6 @@ export class ProdutoEntity {
   )
   caracteristicas: ProdutoCaracteristicaEntity[];
 
-  // @OneToMany(
-  //   () => ProdutoPedidoEntity,
-  //   (produtoPedido) => produtoPedido.produto,
-  // )
-  // produtosPedido: ProdutoPedidoEntity[];
+  // @OneToMany(() => ItemPedidoEntity, (produtoPedido) => produtoPedido.produto)
+  // produtosPedido: ItemPedidoEntity[];
 }

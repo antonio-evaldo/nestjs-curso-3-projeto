@@ -4,7 +4,7 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { PedidoEntity } from './pedido.entity';
 
 @Entity({ name: 'produdo_pedido' })
-export class ProdutoPedidoEntity {
+export class ItemPedidoEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -14,7 +14,7 @@ export class ProdutoPedidoEntity {
   @Column({ name: 'preco_venda', type: 'float', nullable: false })
   precoVenda: number;
 
-  @ManyToOne(() => PedidoEntity, (pedido) => pedido.produtosPedido)
+  @ManyToOne(() => PedidoEntity, (pedido) => pedido.itensPedido)
   pedido: PedidoEntity;
 
   // @ManyToOne(() => ProdutoEntity, (produto) => produto.produtosPedido)

@@ -3,12 +3,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UsuarioEntity } from './usuario.entity';
 import { Repository } from 'typeorm';
 import { PedidoEntity } from './pedido.entity';
-import { ProdutoPedidoEntity } from './produtoPedido.entity';
+import { ItemPedidoEntity } from './itemPedido.entity';
 
 import { ListaUsuarioDTO } from './dto/ListaUsuario.dto';
 import { AtualizaUsuarioDTO } from './dto/AtualizaUsuario.dto';
 import { CriaPedidoDTO } from './dto/CriaPedido.dto';
 import { ListaPedidoDTO } from './dto/ListaPedido.dto';
+import { ProdutoEntity } from 'src/produto/produto.entity';
 
 @Injectable()
 export class UsuarioService {
@@ -17,8 +18,8 @@ export class UsuarioService {
     private readonly usuarioRepository: Repository<UsuarioEntity>,
     @InjectRepository(PedidoEntity)
     private readonly pedidoRepository: Repository<PedidoEntity>,
-    @InjectRepository(ProdutoPedidoEntity)
-    private readonly produtoPedidoRepository: Repository<ProdutoPedidoEntity>,
+    @InjectRepository(ItemPedidoEntity)
+    private readonly produtoPedidoRepository: Repository<ItemPedidoEntity>,
   ) {}
 
   async criaUsuario(usuarioEntity: UsuarioEntity) {
@@ -84,21 +85,29 @@ export class UsuarioService {
     pedidoEntity.status = dadosDoPedido.status;
     pedidoEntity.usuario = usuario;
 
-    const pedidoCriado = await this.pedidoRepository.save(pedidoEntity);
+    // const pedidoCriado = await this.pedidoRepository.save(pedidoEntity);
 
-    const produtosPedidoEntidades = dadosDoPedido.produtosPedido.map(
-      (produtoPedido) => {
-        const produtoPedidoEntity = new ProdutoPedidoEntity();
+    const produtosPedidoEntidades = dadosDoPedido.itensPedido.map(
+      (itemPedido) => {
+        const produtoPedidoEntity = new ItemPedidoEntity();
 
-        produtoPedidoEntity.precoVenda = produtoPedido.precoVenda;
-        produtoPedidoEntity.quantidade = produtoPedido.quantidade;
-        produtoPedidoEntity.pedido = pedidoCriado;
+        // const produtoEntity = new ProdutoEntity();
+        // produtoEntity.id = itemPedido.produtoId;
+
+        produtoPedidoEntity.precoVenda = itemPedido.precoVenda;
+        produtoPedidoEntity.quantidade = itemPedido.quantidade;
+        // produtoPedidoEntity.pedido = pedidoCriado;
+        // produtoPedidoEntity.produto = produtoEntity;
 
         return produtoPedidoEntity;
       },
     );
 
-    this.produtoPedidoRepository.save(produtosPedidoEntidades);
+    pedidoEntity.itensPedido = produtosPedidoEntidades;
+
+    const pedidoCriado = await this.pedidoRepository.save(pedidoEntity);
+
+    // this.produtoPedidoRepository.save(produtosPedidoEntidades);
 
     // this.produtoPedidoRepository.save(dadosDoPedido)
 
