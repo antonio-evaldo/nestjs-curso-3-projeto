@@ -36,6 +36,6 @@ export class PedidoEntity {
   @ManyToOne(() => UsuarioEntity, (usuario) => usuario.pedidos)
   usuario: UsuarioEntity;
 
-  // @OneToMany(() => ProdutoPedidoEntity, (produtoPedido) => produtoPedido.pedido)
-  // produtosPedido: ProdutoPedidoEntity[];
+  @OneToMany(() => ProdutoPedidoEntity, (produtoPedido) => produtoPedido.pedido)
+  produtosPedido: ProdutoPedidoEntity[];
 }

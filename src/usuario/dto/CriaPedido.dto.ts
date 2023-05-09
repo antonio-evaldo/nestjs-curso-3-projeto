@@ -12,8 +12,8 @@ import {
 import { StatusPedido } from '../enums/statusPedido.enum';
 
 class ProdudoPedidoDTO {
-  @IsUUID()
-  produtoId: string;
+  // @IsUUID()
+  // produtoId: string;
 
   @IsInt()
   quantidade: number;
@@ -29,9 +29,9 @@ export class CriaPedidoDTO {
   @IsIn(['em_processamento', 'processado', 'cancelado'])
   status: StatusPedido;
 
-  // @ValidateNested()
-  // @IsArray()
-  // @ArrayMinSize(1)
-  // @Type(() => ProdudoPedidoDTO)
-  // produtosPedido: ProdudoPedidoDTO[];
+  @ValidateNested()
+  @IsArray()
+  @ArrayMinSize(1)
+  @Type(() => ProdudoPedidoDTO)
+  produtosPedido: ProdudoPedidoDTO[];
 }

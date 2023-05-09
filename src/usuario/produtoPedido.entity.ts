@@ -14,8 +14,8 @@ export class ProdutoPedidoEntity {
   @Column({ name: 'preco_venda', type: 'float', nullable: false })
   precoVenda: number;
 
-  // @ManyToOne(() => PedidoEntity, (pedido) => pedido.produtosPedido)
-  // pedido: PedidoEntity;
+  @ManyToOne(() => PedidoEntity, (pedido) => pedido.produtosPedido)
+  pedido: PedidoEntity;
 
   // @ManyToOne(() => ProdutoEntity, (produto) => produto.produtosPedido)
   // produto: ProdutoEntity;

@@ -73,9 +73,18 @@ export class UsuarioController {
     };
   }
 
+  @Get('/:id/pedidos')
+  async obtemPedidos(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) idUsuario: string,
+  ) {
+    const pedidos = await this.usuarioService.obtemPedidos(idUsuario);
+
+    return pedidos;
+  }
+
   @Post('/:id/pedidos')
   async cadastraPedido(
-    @Param('id') idUsuario: string,
+    @Param('id', new ParseUUIDPipe({ version: '4' })) idUsuario: string,
     @Body() dadosDoPedido: CriaPedidoDTO,
   ) {
     const pedidoCriado = await this.usuarioService.cadastraPedido(

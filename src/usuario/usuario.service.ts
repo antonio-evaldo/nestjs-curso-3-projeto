@@ -4,7 +4,6 @@ import { UsuarioEntity } from './usuario.entity';
 import { Repository } from 'typeorm';
 import { PedidoEntity } from './pedido.entity';
 import { ProdutoPedidoEntity } from './produtoPedido.entity';
-import { ProdutoEntity } from 'src/produto/produto.entity';
 
 import { ListaUsuarioDTO } from './dto/ListaUsuario.dto';
 import { AtualizaUsuarioDTO } from './dto/AtualizaUsuario.dto';
@@ -66,6 +65,14 @@ export class UsuarioService {
     await this.usuarioRepository.delete(id);
   }
 
+  async obtemPedidos(idUsuario: string) {
+    return await this.pedidoRepository.find({
+      where: {
+        usuario: { id: idUsuario },
+      },
+    });
+  }
+
   async cadastraPedido(idUsuario: string, dadosDoPedido: CriaPedidoDTO) {
     console.log(idUsuario, dadosDoPedido);
 
@@ -78,6 +85,22 @@ export class UsuarioService {
     pedidoEntity.usuario = usuario;
 
     const pedidoCriado = await this.pedidoRepository.save(pedidoEntity);
+
+    const produtosPedidoEntidades = dadosDoPedido.produtosPedido.map(
+      (produtoPedido) => {
+        const produtoPedidoEntity = new ProdutoPedidoEntity();
+
+        produtoPedidoEntity.precoVenda = produtoPedido.precoVenda;
+        produtoPedidoEntity.quantidade = produtoPedido.quantidade;
+        produtoPedidoEntity.pedido = pedidoCriado;
+
+        return produtoPedidoEntity;
+      },
+    );
+
+    this.produtoPedidoRepository.save(produtosPedidoEntidades);
+
+    // this.produtoPedidoRepository.save(dadosDoPedido)
 
     // pedidoEntity.produtosPedido = dadosDoPedido.produtosPedido;
 
