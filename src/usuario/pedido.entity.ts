@@ -21,7 +21,7 @@ export class PedidoEntity {
   @Column({ name: 'valor_total', type: 'float', nullable: false })
   valorTotal: number;
 
-  @Column({ name: 'status', type: 'enum', enum: StatusPedido, nullable: false })
+  @Column({ name: 'status', enum: StatusPedido, nullable: false })
   status: StatusPedido;
 
   @CreateDateColumn({ name: 'created_at' })
@@ -35,6 +35,9 @@ export class PedidoEntity {
 
   @ManyToOne(() => UsuarioEntity, (usuario) => usuario.pedidos)
   usuario: UsuarioEntity;
+
+  @Column({ name: 'usuarioId' })
+  usuarioId: string;
 
   @OneToMany(() => ItemPedidoEntity, (itemPedido) => itemPedido.pedido, {
     cascade: true,

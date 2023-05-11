@@ -17,6 +17,9 @@ export class ItemPedidoEntity {
   @ManyToOne(() => PedidoEntity, (pedido) => pedido.itensPedido)
   pedido: PedidoEntity;
 
-  // @ManyToOne(() => ProdutoEntity, (produto) => produto.produtosPedido)
-  // produto: ProdutoEntity;
+  @Column({ name: 'produtoId', nullable: false })
+  produtoId: string;
+
+  @ManyToOne(() => ProdutoEntity, (produto) => produto.produtosPedido)
+  produto: ProdutoEntity;
 }

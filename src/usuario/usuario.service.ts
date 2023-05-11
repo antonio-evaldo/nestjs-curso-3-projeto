@@ -9,7 +9,7 @@ import { ListaUsuarioDTO } from './dto/ListaUsuario.dto';
 import { AtualizaUsuarioDTO } from './dto/AtualizaUsuario.dto';
 import { CriaPedidoDTO } from './dto/CriaPedido.dto';
 import { ListaPedidoDTO } from './dto/ListaPedido.dto';
-import { ProdutoEntity } from 'src/produto/produto.entity';
+import { StatusPedido } from './enums/statusPedido.enum';
 
 @Injectable()
 export class UsuarioService {
@@ -19,7 +19,7 @@ export class UsuarioService {
     @InjectRepository(PedidoEntity)
     private readonly pedidoRepository: Repository<PedidoEntity>,
     @InjectRepository(ItemPedidoEntity)
-    private readonly produtoPedidoRepository: Repository<ItemPedidoEntity>,
+    private readonly itemPedidoRepository: Repository<ItemPedidoEntity>,
   ) {}
 
   async criaUsuario(usuarioEntity: UsuarioEntity) {
@@ -71,60 +71,41 @@ export class UsuarioService {
       where: {
         usuario: { id: idUsuario },
       },
+      relations: {
+        itensPedido: { produto: true },
+      },
     });
   }
 
+  // recebemos o DTO, não a entidade
   async cadastraPedido(idUsuario: string, dadosDoPedido: CriaPedidoDTO) {
     console.log(idUsuario, dadosDoPedido);
 
-    const usuario = await this.usuarioRepository.findOneBy({ id: idUsuario });
+    const pedidoEntity = this.pedidoRepository.create({
+      status: StatusPedido.EM_PROCESSAMENTO,
+      usuarioId: idUsuario,
+    });
 
-    const pedidoEntity = new PedidoEntity();
+    let valorTotal = 0;
 
-    pedidoEntity.valorTotal = dadosDoPedido.valorTotal;
-    pedidoEntity.status = dadosDoPedido.status;
-    pedidoEntity.usuario = usuario;
+    const itensPedidoEntidades = dadosDoPedido.itensPedido.map((itemPedido) => {
+      const itemPedidoEntity = this.itemPedidoRepository.create({
+        produtoId: itemPedido.produtoId,
+        precoVenda: itemPedido.precoVenda,
+        quantidade: itemPedido.quantidade,
+      });
 
-    // const pedidoCriado = await this.pedidoRepository.save(pedidoEntity);
+      valorTotal += itemPedido.precoVenda * itemPedido.quantidade;
 
-    const produtosPedidoEntidades = dadosDoPedido.itensPedido.map(
-      (itemPedido) => {
-        const produtoPedidoEntity = new ItemPedidoEntity();
+      return itemPedidoEntity;
+    });
 
-        // const produtoEntity = new ProdutoEntity();
-        // produtoEntity.id = itemPedido.produtoId;
+    pedidoEntity.valorTotal = valorTotal;
 
-        produtoPedidoEntity.precoVenda = itemPedido.precoVenda;
-        produtoPedidoEntity.quantidade = itemPedido.quantidade;
-        // produtoPedidoEntity.pedido = pedidoCriado;
-        // produtoPedidoEntity.produto = produtoEntity;
+    pedidoEntity.itensPedido = itensPedidoEntidades;
 
-        return produtoPedidoEntity;
-      },
-    );
-
-    pedidoEntity.itensPedido = produtosPedidoEntidades;
-
+    // fazendo cascata
     const pedidoCriado = await this.pedidoRepository.save(pedidoEntity);
-
-    // this.produtoPedidoRepository.save(produtosPedidoEntidades);
-
-    // this.produtoPedidoRepository.save(dadosDoPedido)
-
-    // pedidoEntity.produtosPedido = dadosDoPedido.produtosPedido;
-
-    // dadosDoPedido.produtosPedido.forEach((produtoPedido) => {
-    //   const produtoPedidoEntity = new ProdutoPedidoEntity();
-    //   const produtoEntity = new ProdutoEntity();
-
-    //   produtoEntity.id = produtoPedido.produtoId;
-
-    //   produtoPedidoEntity.precoVenda = produtoPedido.precoVenda;
-    //   produtoPedidoEntity.quantidade = produtoPedido.quantidade;
-    //   produtoPedidoEntity.pedido = produtoEntity;
-
-    //   this.produtoPedidoRepository.save(produtoPedido);
-    // });
 
     return pedidoCriado;
   }

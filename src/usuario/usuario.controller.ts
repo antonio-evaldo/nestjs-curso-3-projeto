@@ -73,9 +73,12 @@ export class UsuarioController {
     };
   }
 
-  @Get('/:id/pedidos')
+  // GET /:idUsuario/pedidos
+  // GET /pedidos
+
+  @Get('/:idUsuario/pedidos')
   async obtemPedidos(
-    @Param('id', new ParseUUIDPipe({ version: '4' })) idUsuario: string,
+    @Param('idUsuario', new ParseUUIDPipe({ version: '4' })) idUsuario: string,
   ) {
     const pedidos = await this.usuarioService.obtemPedidos(idUsuario);
 

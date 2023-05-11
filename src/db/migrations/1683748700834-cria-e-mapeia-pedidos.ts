@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class criaTabelasPedido1683570082337 implements MigrationInterface {
-  name = 'criaTabelasPedido1683570082337';
+export class criaEMapeiaPedidos1683748700834 implements MigrationInterface {
+  name = 'criaEMapeiaPedidos1683748700834';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -33,7 +33,7 @@ export class criaTabelasPedido1683570082337 implements MigrationInterface {
       `ALTER TABLE "pedidos" DROP CONSTRAINT "FK_e60a655127c227b5e063e73165b"`,
     );
     await queryRunner.query(
-      `ALTER TABLE "produtos" ADD "usuario_id" character varying(100) NOT NULL`,
+      `ALTER TABLE "produtos" ADD "usuario_id" character varying(100)`,
     );
     await queryRunner.query(`DROP TABLE "produdo_pedido"`);
     await queryRunner.query(`DROP TABLE "pedidos"`);
