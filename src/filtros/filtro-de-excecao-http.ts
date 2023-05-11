@@ -12,7 +12,7 @@ import { HttpAdapterHost } from '@nestjs/core';
 export class FiltroDeExcecaoHttpGlobal implements ExceptionFilter {
   constructor(private adapterHost: HttpAdapterHost) {}
 
-  catch(excecao: Error, host: ArgumentsHost) {
+  catch(excecao: unknown, host: ArgumentsHost) {
     console.log(excecao);
 
     const { httpAdapter } = this.adapterHost;
