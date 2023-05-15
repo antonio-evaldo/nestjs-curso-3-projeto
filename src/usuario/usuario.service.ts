@@ -83,6 +83,10 @@ export class UsuarioService {
   async cadastraPedido(idUsuario: string, dadosDoPedido: CriaPedidoDTO) {
     const usuario = await this.usuarioRepository.findOneBy({ id: idUsuario });
 
+    if (usuario === null) {
+      throw new NotFoundException('Usuário não encontrado.');
+    }
+
     const pedidoEntity = this.pedidoRepository.create({
       status: StatusPedido.EM_PROCESSAMENTO,
       usuario,
