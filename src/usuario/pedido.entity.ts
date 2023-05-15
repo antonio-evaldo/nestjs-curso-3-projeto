@@ -36,9 +36,6 @@ export class PedidoEntity {
   @ManyToOne(() => UsuarioEntity, (usuario) => usuario.pedidos)
   usuario: UsuarioEntity;
 
-  @Column({ name: 'usuarioId' })
-  usuarioId: string;
-
   @OneToMany(() => ItemPedidoEntity, (itemPedido) => itemPedido.pedido, {
     cascade: true,
   })

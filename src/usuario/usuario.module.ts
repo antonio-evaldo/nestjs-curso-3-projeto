@@ -6,10 +6,16 @@ import { UsuarioService } from './usuario.service';
 import { UsuarioEntity } from './usuario.entity';
 import { PedidoEntity } from './pedido.entity';
 import { ItemPedidoEntity } from './itemPedido.entity';
+import { ProdutoEntity } from 'src/produto/produto.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UsuarioEntity, PedidoEntity, ItemPedidoEntity]),
+    TypeOrmModule.forFeature([
+      UsuarioEntity,
+      PedidoEntity,
+      ItemPedidoEntity,
+      ProdutoEntity,
+    ]),
   ],
   controllers: [UsuarioController],
   providers: [UsuarioService, EmailEhUnicoValidator],

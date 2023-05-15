@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsuarioEntity } from './usuario.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { PedidoEntity } from './pedido.entity';
 import { ItemPedidoEntity } from './itemPedido.entity';
 
@@ -10,6 +10,7 @@ import { AtualizaUsuarioDTO } from './dto/AtualizaUsuario.dto';
 import { CriaPedidoDTO } from './dto/CriaPedido.dto';
 import { ListaPedidoDTO } from './dto/ListaPedido.dto';
 import { StatusPedido } from './enums/statusPedido.enum';
+import { ProdutoEntity } from 'src/produto/produto.entity';
 
 @Injectable()
 export class UsuarioService {
@@ -20,6 +21,8 @@ export class UsuarioService {
     private readonly pedidoRepository: Repository<PedidoEntity>,
     @InjectRepository(ItemPedidoEntity)
     private readonly itemPedidoRepository: Repository<ItemPedidoEntity>,
+    @InjectRepository(ProdutoEntity)
+    private readonly produtoRepository: Repository<ProdutoEntity>,
   ) {}
 
   async criaUsuario(usuarioEntity: UsuarioEntity) {
@@ -77,34 +80,51 @@ export class UsuarioService {
     });
   }
 
-  // recebemos o DTO, não a entidade
   async cadastraPedido(idUsuario: string, dadosDoPedido: CriaPedidoDTO) {
-    console.log(idUsuario, dadosDoPedido);
+    const usuario = await this.usuarioRepository.findOneBy({ id: idUsuario });
 
     const pedidoEntity = this.pedidoRepository.create({
       status: StatusPedido.EM_PROCESSAMENTO,
-      usuarioId: idUsuario,
+      usuario,
+    });
+
+    const produtosIds = dadosDoPedido.itensPedido.map(
+      (itemPedido) => itemPedido.produtoId,
+    );
+
+    const produtos = await this.produtoRepository.findBy({
+      id: In(produtosIds),
     });
 
     let valorTotal = 0;
 
     const itensPedidoEntidades = dadosDoPedido.itensPedido.map((itemPedido) => {
+      const produtoRelacionado = produtos.find(
+        (produto) => produto.id === itemPedido.produtoId,
+      );
+
+      // Pode deixar eu implementar essa parte no aula de tratamento de erros
+      if (produtoRelacionado === undefined) {
+        throw new NotFoundException(
+          `Não foi encontrado um produto com id ${itemPedido.produtoId}`,
+        );
+      }
+
       const itemPedidoEntity = this.itemPedidoRepository.create({
-        produtoId: itemPedido.produtoId,
-        precoVenda: itemPedido.precoVenda,
+        produto: produtoRelacionado,
+        precoVenda: produtoRelacionado.valor,
         quantidade: itemPedido.quantidade,
       });
 
-      valorTotal += itemPedido.precoVenda * itemPedido.quantidade;
+      valorTotal += itemPedidoEntity.precoVenda * itemPedido.quantidade;
 
       return itemPedidoEntity;
     });
 
-    pedidoEntity.valorTotal = valorTotal;
+    pedidoEntity.valorTotal = +valorTotal.toFixed(2);
 
     pedidoEntity.itensPedido = itensPedidoEntidades;
 
-    // fazendo cascata
     const pedidoCriado = await this.pedidoRepository.save(pedidoEntity);
 
     return pedidoCriado;
