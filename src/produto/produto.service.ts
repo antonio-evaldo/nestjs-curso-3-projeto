@@ -13,10 +13,10 @@ export class ProdutoService {
   ) {}
 
   async criaProduto(produtoEntity: ProdutoEntity) {
-    await this.produtoRepository.save(produtoEntity);
+    return await this.produtoRepository.save(produtoEntity);
   }
 
-  async listProdutos() {
+  async listaProdutos() {
     const produtosSalvos = await this.produtoRepository.find({
       relations: {
         imagens: true,
@@ -28,6 +28,7 @@ export class ProdutoService {
         new ListaProdutoDTO(
           produto.id,
           produto.nome,
+          produto.descricao,
           produto.caracteristicas,
           produto.imagens,
         ),
@@ -38,7 +39,7 @@ export class ProdutoService {
   async atualizaProduto(id: string, novosDados: AtualizaProdutoDTO) {
     const entityName = await this.produtoRepository.findOneBy({ id });
     Object.assign(entityName, novosDados);
-    await this.produtoRepository.save(entityName);
+    return await this.produtoRepository.save(entityName);
   }
 
   async deletaProduto(id: string) {
