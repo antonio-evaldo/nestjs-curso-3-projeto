@@ -17,6 +17,9 @@ export class ItemPedidoEntity {
   @ManyToOne(() => PedidoEntity, (pedido) => pedido.itensPedido)
   pedido: PedidoEntity;
 
-  @ManyToOne(() => ProdutoEntity, (produto) => produto.produtosPedido)
+  @ManyToOne(() => ProdutoEntity, (produto) => produto.produtosPedido, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   produto: ProdutoEntity;
 }
