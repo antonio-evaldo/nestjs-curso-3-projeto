@@ -7,6 +7,7 @@ import { UsuarioModule } from './usuario/usuario.module';
 import { PostgresConfigService } from './config/postgres.config.service';
 import { APP_FILTER } from '@nestjs/core';
 import { FiltroDeExcecaoHttpGlobal } from './filtros/filtro-de-excecao-http';
+import { PedidoModule } from './pedido/pedido.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { FiltroDeExcecaoHttpGlobal } from './filtros/filtro-de-excecao-http';
       useClass: PostgresConfigService,
       inject: [PostgresConfigService],
     }),
+    PedidoModule,
   ],
   providers: [
     {

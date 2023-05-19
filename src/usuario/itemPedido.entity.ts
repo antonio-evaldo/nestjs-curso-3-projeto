@@ -11,15 +11,15 @@ export class ItemPedidoEntity {
   @Column({ name: 'quantidade', nullable: false })
   quantidade: number;
 
-  @Column({ name: 'preco_venda', type: 'float', nullable: false })
+  @Column({ name: 'preco_venda', nullable: false })
   precoVenda: number;
 
-  @ManyToOne(() => PedidoEntity, (pedido) => pedido.itensPedido)
-  pedido: PedidoEntity;
-
-  @ManyToOne(() => ProdutoEntity, (produto) => produto.produtosPedido, {
+  @ManyToOne(() => PedidoEntity, (pedido) => pedido.itensPedido, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
+  pedido: PedidoEntity;
+
+  @ManyToOne(() => ProdutoEntity, (produto) => produto.produtosPedido)
   produto: ProdutoEntity;
 }

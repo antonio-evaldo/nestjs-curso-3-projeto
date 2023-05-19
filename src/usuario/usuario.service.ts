@@ -103,20 +103,8 @@ export class UsuarioService {
     let valorTotal = 0;
 
     const itensPedidoEntidades = dadosDoPedido.itensPedido.map((itemPedido) => {
-      const produtoRelacionado = produtos.find(
-        (produto) => produto.id === itemPedido.produtoId,
-      );
-
-      // Pode deixar eu implementar essa parte no aula de tratamento de erros
-      if (produtoRelacionado === undefined) {
-        throw new NotFoundException(
-          `Não foi encontrado um produto com id ${itemPedido.produtoId}`,
-        );
-      }
-
       const itemPedidoEntity = this.itemPedidoRepository.create({
-        produto: produtoRelacionado,
-        precoVenda: produtoRelacionado.valor,
+        precoVenda: 10,
         quantidade: itemPedido.quantidade,
       });
 
@@ -125,7 +113,7 @@ export class UsuarioService {
       return itemPedidoEntity;
     });
 
-    pedidoEntity.valorTotal = +valorTotal.toFixed(2);
+    pedidoEntity.valorTotal = valorTotal;
 
     pedidoEntity.itensPedido = itensPedidoEntidades;
 
