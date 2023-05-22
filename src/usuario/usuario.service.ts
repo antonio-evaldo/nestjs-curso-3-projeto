@@ -1,16 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsuarioEntity } from './usuario.entity';
-import { In, Repository } from 'typeorm';
-import { PedidoEntity } from './pedido.entity';
-import { ItemPedidoEntity } from './itemPedido.entity';
+import { Repository } from 'typeorm';
 
 import { ListaUsuarioDTO } from './dto/ListaUsuario.dto';
 import { AtualizaUsuarioDTO } from './dto/AtualizaUsuario.dto';
-import { CriaPedidoDTO } from './dto/CriaPedido.dto';
 import { ListaPedidoDTO } from './dto/ListaPedido.dto';
-import { StatusPedido } from './enums/statusPedido.enum';
-import { ProdutoEntity } from 'src/produto/produto.entity';
+import { PedidoEntity } from 'src/pedido/pedido.entity';
 
 @Injectable()
 export class UsuarioService {
@@ -19,10 +15,6 @@ export class UsuarioService {
     private readonly usuarioRepository: Repository<UsuarioEntity>,
     @InjectRepository(PedidoEntity)
     private readonly pedidoRepository: Repository<PedidoEntity>,
-    @InjectRepository(ItemPedidoEntity)
-    private readonly itemPedidoRepository: Repository<ItemPedidoEntity>,
-    @InjectRepository(ProdutoEntity)
-    private readonly produtoRepository: Repository<ProdutoEntity>,
   ) {}
 
   async criaUsuario(usuarioEntity: UsuarioEntity) {
@@ -78,47 +70,5 @@ export class UsuarioService {
         itensPedido: { produto: true },
       },
     });
-  }
-
-  async cadastraPedido(idUsuario: string, dadosDoPedido: CriaPedidoDTO) {
-    const usuario = await this.usuarioRepository.findOneBy({ id: idUsuario });
-
-    if (usuario === null) {
-      throw new NotFoundException('Usuário não encontrado.');
-    }
-
-    const pedidoEntity = this.pedidoRepository.create({
-      status: StatusPedido.EM_PROCESSAMENTO,
-      usuario,
-    });
-
-    const produtosIds = dadosDoPedido.itensPedido.map(
-      (itemPedido) => itemPedido.produtoId,
-    );
-
-    const produtos = await this.produtoRepository.findBy({
-      id: In(produtosIds),
-    });
-
-    let valorTotal = 0;
-
-    const itensPedidoEntidades = dadosDoPedido.itensPedido.map((itemPedido) => {
-      const itemPedidoEntity = this.itemPedidoRepository.create({
-        precoVenda: 10,
-        quantidade: itemPedido.quantidade,
-      });
-
-      valorTotal += itemPedidoEntity.precoVenda * itemPedido.quantidade;
-
-      return itemPedidoEntity;
-    });
-
-    pedidoEntity.valorTotal = valorTotal;
-
-    pedidoEntity.itensPedido = itensPedidoEntidades;
-
-    const pedidoCriado = await this.pedidoRepository.save(pedidoEntity);
-
-    return pedidoCriado;
   }
 }

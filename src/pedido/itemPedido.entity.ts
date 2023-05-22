@@ -3,7 +3,7 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
 import { PedidoEntity } from './pedido.entity';
 
-@Entity({ name: 'produdo_pedido' })
+@Entity({ name: 'itens_pedidos' })
 export class ItemPedidoEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -20,6 +20,8 @@ export class ItemPedidoEntity {
   })
   pedido: PedidoEntity;
 
-  @ManyToOne(() => ProdutoEntity, (produto) => produto.produtosPedido)
+  @ManyToOne(() => ProdutoEntity, (produto) => produto.itensPedido, {
+    cascade: ['update'], // permite que a tabela ItemPedido apenas atualize a tabela Produto, mas não insira novos registros (o que seria 'insert')
+  })
   produto: ProdutoEntity;
 }

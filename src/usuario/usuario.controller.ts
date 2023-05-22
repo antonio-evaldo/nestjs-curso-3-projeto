@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { v4 as uuid } from 'uuid';
 import { AtualizaUsuarioDTO } from './dto/AtualizaUsuario.dto';
-import { CriaPedidoDTO } from './dto/CriaPedido.dto';
 import { CriaUsuarioDTO } from './dto/CriaUsuario.dto';
 import { ListaUsuarioDTO } from './dto/ListaUsuario.dto';
 import { UsuarioEntity } from './usuario.entity';
@@ -83,18 +82,5 @@ export class UsuarioController {
     const pedidos = await this.usuarioService.obtemPedidos(idUsuario);
 
     return pedidos;
-  }
-
-  @Post('/:id/pedidos')
-  async cadastraPedido(
-    @Param('id', new ParseUUIDPipe({ version: '4' })) idUsuario: string,
-    @Body() dadosDoPedido: CriaPedidoDTO,
-  ) {
-    const pedidoCriado = await this.usuarioService.cadastraPedido(
-      idUsuario,
-      dadosDoPedido,
-    );
-
-    return pedidoCriado;
   }
 }

@@ -33,7 +33,6 @@ export class FiltroDeExcecaoHttpGlobal implements ExceptionFilter {
               statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
               timestamp: new Date().toISOString(),
               path: httpAdapter.getRequestUrl(requisicao),
-              // path: requisicao.path,
             },
           };
 

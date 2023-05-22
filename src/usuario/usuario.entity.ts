@@ -1,3 +1,4 @@
+import { PedidoEntity } from 'src/pedido/pedido.entity';
 import {
   Entity,
   Column,
@@ -7,7 +8,6 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
 } from 'typeorm';
-import { PedidoEntity } from './pedido.entity';
 
 @Entity({ name: 'usuarios' })
 export class UsuarioEntity {
