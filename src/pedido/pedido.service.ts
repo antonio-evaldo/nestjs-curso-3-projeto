@@ -104,7 +104,7 @@ export class PedidoService {
   //   return `This action returns a #${id} pedido`;
   // }
 
-  async atualizaPedido(id: string, atualizaPedidoDto: AtualizaPedidoDto) {
+  async atualizaPedido(id: string, dto: AtualizaPedidoDto) {
     const pedido = await this.pedidoRepository.findOneBy({ id });
 
     if (pedido === null) {
@@ -113,8 +113,7 @@ export class PedidoService {
       );
     }
 
-    // Object.assign(pedido, atualizaPedidoDto as PedidoEntity);
-    Object.assign(pedido, atualizaPedidoDto);
+    Object.assign(pedido, dto as PedidoEntity);
 
     return this.pedidoRepository.save(pedido);
   }

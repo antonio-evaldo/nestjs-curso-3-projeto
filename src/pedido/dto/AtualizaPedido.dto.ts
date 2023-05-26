@@ -1,4 +1,7 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CriaPedidoDTO, ItemPedidoDTO } from './CriaPedido.dto';
+import { IsEnum } from 'class-validator';
+import { StatusPedido } from '../enum/statuspedido.enum';
 
-export class AtualizaPedidoDto extends PartialType(CriaPedidoDTO) {}
+export class AtualizaPedidoDto {
+  @IsEnum(StatusPedido)
+  status: StatusPedido;
+}

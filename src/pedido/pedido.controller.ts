@@ -40,12 +40,12 @@ export class PedidoController {
   //   return this.pedidoService.findOne(+id);
   // }
 
-  @Patch(':id')
+  @Patch(':id/status')
   atualizaPedido(
     @Param('id') pedidoId: string,
-    @Body() atualizaPedidoDto: AtualizaPedidoDto,
+    @Body() dadosDeAtualizacao: AtualizaPedidoDto,
   ) {
-    return this.pedidoService.atualizaPedido(pedidoId, atualizaPedidoDto);
+    return this.pedidoService.atualizaPedido(pedidoId, dadosDeAtualizacao);
   }
 
   @Delete(':id')

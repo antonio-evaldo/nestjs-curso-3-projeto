@@ -58,7 +58,7 @@ export class ProdutoService {
       throw new NotFoundException('O produto não foi encontrado');
     }
 
-    Object.assign(entityName, novosDados);
+    Object.assign(entityName, novosDados as ProdutoEntity);
     return await this.produtoRepository.save(entityName);
   }
 
